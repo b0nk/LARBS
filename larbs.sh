@@ -185,9 +185,12 @@ adduserandpass || error "Error adding username and/or password."
 # in a fakeroot environment, this is required for all builds with AUR.
 newperms "%wheel ALL=(ALL) NOPASSWD: ALL"
 
-# Make pacman and paru colorful and adds eye candy on the progress bar because why not.
+# Make pacman and trizen colorful and adds eye candy on the progress bar because why not.
 grep -q "^Color" /etc/pacman.conf || sed -i "s/^#Color$/Color/" /etc/pacman.conf
 grep -q "ILoveCandy" /etc/pacman.conf || sed -i "/#VerbosePkgLists/a ILoveCandy" /etc/pacman.conf
+
+# Enable multilib repository
+grep -Pzoq "\[multilib\]\nInclude = /etc/pacman\.d/mirrorlist" /etc/pacman.conf || sed -i "/\[multilib]/,/Include/"'s/^#//' /etc/pacman.conf
 
 # Use all cores for compilation.
 sed -i "s/-j2/-j$(nproc)/;s/^#MAKEFLAGS/MAKEFLAGS/" /etc/makepkg.conf
